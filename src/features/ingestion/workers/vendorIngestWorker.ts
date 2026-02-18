@@ -1,5 +1,5 @@
-import type FootballIngestRepository from '@/features/ingestion/repositories/footballIngestRepository.js';
-import type VendorHttpClient from '@/features/ingestion/providers/vendorHttpClient.js';
+import type FootballIngestRepository from '@/features/ingestion/repositories/FootballIngestRepository.js';
+import type VendorHttpClient from '@/features/ingestion/providers/VendorHttpClient.js';
 
 export default class VendorIngestWorker {
   private timer: NodeJS.Timeout | null = null;

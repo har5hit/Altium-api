@@ -1,6 +1,6 @@
 import type { PostgresDb } from '@fastify/postgres';
-import { MatchStatus } from '@/features/matches/models/matchStatus.js';
-import type { MatchDbModel } from '@/features/matches/repositories/matchDbModel.js';
+import { MatchStatus } from '@/features/matches/models/MatchStatus.js';
+import type { MatchDbModel } from '@/features/matches/repositories/MatchDbModel.js';
 
 export default class HomeFeedRepository {
   constructor(private readonly pg: PostgresDb) {}
@@ -23,9 +23,9 @@ export default class HomeFeedRepository {
        WHERE utc_kickoff >= now() - interval '12 hours'
        ORDER BY
          CASE status
-           WHEN '${MatchStatus.Live}' THEN 1
-           WHEN '${MatchStatus.Scheduled}' THEN 2
-           WHEN '${MatchStatus.Finished}' THEN 3
+           WHEN '${MatchStatus.LIVE}' THEN 1
+           WHEN '${MatchStatus.SCHEDULED}' THEN 2
+           WHEN '${MatchStatus.FINISHED}' THEN 3
            ELSE 4
          END,
          utc_kickoff ASC,

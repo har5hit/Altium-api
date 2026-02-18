@@ -1,4 +1,4 @@
-import { sanitizeSwiftIdentifier, toCamelCase, toPascalCase } from './naming.mjs';
+import { sanitizeSwiftIdentifier, toCamelCase, toPascalCase, toUpperSnakeCase } from './naming.mjs';
 
 function swiftType(schema, definitions) {
   if (!schema) return 'JSONValue';
@@ -68,7 +68,7 @@ function renderStruct(name, schema, definitions) {
     const enumName = sanitizeSwiftIdentifier(`${typeName}${toPascalCase(fieldName)}`, 'EnumValue');
     const enumCases = nonNull
       .map((variant) => {
-        const caseName = sanitizeSwiftIdentifier(toCamelCase(String(variant.value)), 'value');
+        const caseName = sanitizeSwiftIdentifier(toUpperSnakeCase(String(variant.value)), 'VALUE');
         if (valueKind === 'string') return `    case ${caseName} = "${variant.value}"`;
         return `    case ${caseName} = ${variant.value}`;
       })
@@ -96,7 +96,7 @@ function renderEnum(name, enumDef) {
   const values = enumDef.values ?? [];
   const cases = values
     .map((value) => {
-      const caseName = sanitizeSwiftIdentifier(toCamelCase(value), 'value');
+      const caseName = sanitizeSwiftIdentifier(toUpperSnakeCase(value), 'VALUE');
       return `    case ${caseName} = "${value}"`;
     })
     .join('\n');

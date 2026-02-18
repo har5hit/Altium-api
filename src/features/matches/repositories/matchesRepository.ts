@@ -1,6 +1,6 @@
 import type { PostgresDb } from '@fastify/postgres';
-import { MatchStatus } from '@/features/matches/models/matchStatus.js';
-import type { MatchDbModel } from '@/features/matches/repositories/matchDbModel.js';
+import { MatchStatus } from '@/features/matches/models/MatchStatus.js';
+import type { MatchDbModel } from '@/features/matches/repositories/MatchDbModel.js';
 
 export default class MatchesRepository {
   constructor(private readonly pg: PostgresDb) {}
@@ -23,7 +23,7 @@ export default class MatchesRepository {
        WHERE status = $2
        ORDER BY utc_kickoff ASC, id ASC
        LIMIT $1`,
-      [limit, MatchStatus.Live]
+      [limit, MatchStatus.LIVE]
     );
     return rows;
   }

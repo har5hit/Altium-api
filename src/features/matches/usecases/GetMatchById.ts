@@ -1,7 +1,7 @@
 import { Type, type Static } from '@sinclair/typebox';
 import { NotFoundError } from '@/app/errors.js';
-import { Match } from '@/features/matches/models/match.js';
-import type MatchesRepository from '@/features/matches/repositories/matchesRepository.js';
+import { Match } from '@/features/matches/models/Match.js';
+import type MatchesRepository from '@/features/matches/repositories/MatchesRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const GetMatchByIdInputSchema = Type.Object({

@@ -1,6 +1,6 @@
 import { Type, type Static } from '@sinclair/typebox';
-import { StandingRow } from '@/features/standings/models/standingRow.js';
-import type StandingsRepository from '@/features/standings/repositories/standingsRepository.js';
+import { StandingRow } from '@/features/standings/models/StandingRow.js';
+import type StandingsRepository from '@/features/standings/repositories/StandingsRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const GetStandingsInputSchema = Type.Object({

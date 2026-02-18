@@ -1,6 +1,6 @@
 import { Type, type Static } from '@sinclair/typebox';
 import { SearchResult } from '@/features/search/models/searchResult.js';
-import type SearchRepository from '@/features/search/repositories/searchRepository.js';
+import type SearchRepository from '@/features/search/repositories/SearchRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const SearchFootballInputSchema = Type.Object({

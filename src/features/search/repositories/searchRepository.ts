@@ -1,5 +1,5 @@
 import type { PostgresDb } from '@fastify/postgres';
-import type { SearchResultDbModel } from '@/features/search/repositories/searchResultDbModel.js';
+import type { SearchResultDbModel } from '@/features/search/repositories/SearchResultDbModel.js';
 
 export default class SearchRepository {
   constructor(private readonly pg: PostgresDb) {}

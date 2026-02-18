@@ -82,6 +82,8 @@ Fastify coding standards for the Altium iOS project.
 - **Imports:** Use absolute alias imports from `@/` for project files (no relative local imports), and keep `.js` extensions for ESM compatibility
 - **Class members:** class fields and constructor-injected properties must be `camelCase`
 - **Model fields:** all POJO model properties and `*DbModel` interface fields must be `camelCase`
+- **Enum members:** enum member names must be `UPPER_SNAKE_CASE`
+- **File naming by symbol:** if a file contains only one PascalCase exported symbol (class/interface/enum/const/type), filename must match that symbol name
 - **Architecture:** `src/app/` contains app-level core/common code; `src/features/<feature>/` contains feature code
 - **Feature pattern:** Each feature contains `routes/`, `controllers/`, `usecases/`, and `repositories/`
 - **Data flow:** Route handler -> Controller -> Usecase -> Repository -> PostgreSQL

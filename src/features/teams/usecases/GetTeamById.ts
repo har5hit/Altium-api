@@ -1,7 +1,7 @@
 import { Type, type Static } from '@sinclair/typebox';
 import { NotFoundError } from '@/app/errors.js';
-import { Team } from '@/features/teams/models/team.js';
-import type TeamsRepository from '@/features/teams/repositories/teamsRepository.js';
+import { Team } from '@/features/teams/models/Team.js';
+import type TeamsRepository from '@/features/teams/repositories/TeamsRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const GetTeamByIdInputSchema = Type.Object({

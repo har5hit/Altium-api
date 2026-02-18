@@ -1,6 +1,6 @@
 import type { PostgresDb } from '@fastify/postgres';
-import type { MatchDbModel } from '@/features/matches/repositories/matchDbModel.js';
-import type { TeamDbModel } from '@/features/teams/repositories/teamDbModel.js';
+import type { MatchDbModel } from '@/features/matches/repositories/MatchDbModel.js';
+import type { TeamDbModel } from '@/features/teams/repositories/TeamDbModel.js';
 
 export default class TeamsRepository {
   constructor(private readonly pg: PostgresDb) {}

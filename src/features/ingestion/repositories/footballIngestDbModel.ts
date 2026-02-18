@@ -1,4 +1,4 @@
-import type { MatchStatus } from '@/features/matches/models/matchStatus.js';
+import type { MatchStatus } from '@/features/matches/models/MatchStatus.js';
 
 export interface VendorLeagueDbModel {
   id: number;

@@ -1,5 +1,5 @@
-import type VendorWsClient from '@/features/ingestion/providers/vendorWsClient.js';
-import type FootballIngestRepository from '@/features/ingestion/repositories/footballIngestRepository.js';
+import type VendorWsClient from '@/features/ingestion/providers/VendorWsClient.js';
+import type FootballIngestRepository from '@/features/ingestion/repositories/FootballIngestRepository.js';
 import type { VendorMatchDbModel } from '@/features/ingestion/repositories/footballIngestDbModel.js';
 
 export default class LiveEventWorker {

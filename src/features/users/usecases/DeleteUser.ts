@@ -1,5 +1,5 @@
 import { NotFoundError } from '@/app/errors.js';
-import type UserRepository from '@/features/users/repositories/userRepository.js';
+import type UserRepository from '@/features/users/repositories/UserRepository.js';
 import { Type, type Static } from '@sinclair/typebox';
 
 export const DeleteUserInputSchema = Type.Object({

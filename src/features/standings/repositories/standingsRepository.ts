@@ -1,5 +1,5 @@
 import type { PostgresDb } from '@fastify/postgres';
-import type { StandingRowDbModel } from '@/features/standings/repositories/standingRowDbModel.js';
+import type { StandingRowDbModel } from '@/features/standings/repositories/StandingRowDbModel.js';
 
 export default class StandingsRepository {
   constructor(private readonly pg: PostgresDb) {}

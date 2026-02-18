@@ -1,6 +1,6 @@
 import { Type, type Static } from '@sinclair/typebox';
-import { TeamFixture } from '@/features/teams/models/teamFixture.js';
-import type TeamsRepository from '@/features/teams/repositories/teamsRepository.js';
+import { TeamFixture } from '@/features/teams/models/TeamFixture.js';
+import type TeamsRepository from '@/features/teams/repositories/TeamsRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const GetTeamFixturesInputSchema = Type.Object({

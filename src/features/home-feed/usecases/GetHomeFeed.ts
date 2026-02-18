@@ -1,6 +1,6 @@
 import { Type, type Static } from '@sinclair/typebox';
-import { Match } from '@/features/matches/models/match.js';
-import type HomeFeedRepository from '@/features/home-feed/repositories/homeFeedRepository.js';
+import { Match } from '@/features/matches/models/Match.js';
+import type HomeFeedRepository from '@/features/home-feed/repositories/HomeFeedRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const GetHomeFeedInputSchema = Type.Object({

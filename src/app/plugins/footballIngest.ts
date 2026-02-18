@@ -1,10 +1,10 @@
 import fp from 'fastify-plugin';
 import type { FastifyInstance } from 'fastify';
-import VendorHttpClient from '@/features/ingestion/providers/vendorHttpClient.js';
-import VendorWsClient from '@/features/ingestion/providers/vendorWsClient.js';
-import FootballIngestRepository from '@/features/ingestion/repositories/footballIngestRepository.js';
-import VendorIngestWorker from '@/features/ingestion/workers/vendorIngestWorker.js';
-import LiveEventWorker from '@/features/ingestion/workers/liveEventWorker.js';
+import VendorHttpClient from '@/features/ingestion/providers/VendorHttpClient.js';
+import VendorWsClient from '@/features/ingestion/providers/VendorWsClient.js';
+import FootballIngestRepository from '@/features/ingestion/repositories/FootballIngestRepository.js';
+import VendorIngestWorker from '@/features/ingestion/workers/VendorIngestWorker.js';
+import LiveEventWorker from '@/features/ingestion/workers/LiveEventWorker.js';
 
 function parseStandingsSeed(input: string): Array<{ leagueId: number; season: string }> {
   if (!input) return [];

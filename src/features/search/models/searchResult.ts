@@ -1,9 +1,9 @@
 import { Type } from '@sinclair/typebox';
 
 export enum SearchResultType {
-  Team = 'team',
-  League = 'league',
-  Match = 'match',
+  TEAM = 'team',
+  LEAGUE = 'league',
+  MATCH = 'match',
 }
 
 export const SearchResult = Type.Object({

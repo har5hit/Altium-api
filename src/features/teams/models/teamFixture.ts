@@ -1,5 +1,5 @@
 import { Type } from '@sinclair/typebox';
-import { MatchStatus } from '@/features/matches/models/matchStatus.js';
+import { MatchStatus } from '@/features/matches/models/MatchStatus.js';
 
 export const TeamFixture = Type.Object({
   id: Type.Integer(),

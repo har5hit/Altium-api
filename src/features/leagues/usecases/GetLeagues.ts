@@ -1,6 +1,6 @@
 import { Type, type Static } from '@sinclair/typebox';
-import { League } from '@/features/leagues/models/league.js';
-import type LeaguesRepository from '@/features/leagues/repositories/leaguesRepository.js';
+import { League } from '@/features/leagues/models/League.js';
+import type LeaguesRepository from '@/features/leagues/repositories/LeaguesRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const GetLeaguesInputSchema = Type.Object({

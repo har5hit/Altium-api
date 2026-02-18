@@ -1,5 +1,5 @@
 import type { PostgresDb } from '@fastify/postgres';
-import type { LeagueDbModel } from '@/features/leagues/repositories/leagueDbModel.js';
+import type { LeagueDbModel } from '@/features/leagues/repositories/LeagueDbModel.js';
 
 export default class LeaguesRepository {
   constructor(private readonly pg: PostgresDb) {}
