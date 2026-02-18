@@ -36,6 +36,22 @@ CREATE TABLE IF NOT EXISTS matches (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS players (
+  id BIGINT PRIMARY KEY,
+  team_id BIGINT NOT NULL REFERENCES teams(id),
+  league_id BIGINT REFERENCES leagues(id),
+  name TEXT NOT NULL,
+  short_name TEXT,
+  position TEXT NOT NULL,
+  jersey_number INTEGER,
+  date_of_birth DATE,
+  nationality TEXT NOT NULL,
+  height_cm INTEGER,
+  preferred_foot TEXT,
+  photo_url TEXT,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 CREATE TABLE IF NOT EXISTS standings_snapshots (
   league_id BIGINT NOT NULL REFERENCES leagues(id),
   season TEXT NOT NULL,
@@ -70,6 +86,12 @@ CREATE INDEX IF NOT EXISTS idx_matches_team_away_kickoff
 CREATE INDEX IF NOT EXISTS idx_matches_league_kickoff
   ON matches (league_id, utc_kickoff DESC, id DESC);
 
+CREATE INDEX IF NOT EXISTS idx_players_team
+  ON players (team_id, id);
+
+CREATE INDEX IF NOT EXISTS idx_players_league
+  ON players (league_id, id);
+
 CREATE INDEX IF NOT EXISTS idx_standings_league_season_position
   ON standings_snapshots (league_id, season, position);
 
@@ -81,3 +103,6 @@ CREATE INDEX IF NOT EXISTS idx_leagues_name_lower
 
 CREATE INDEX IF NOT EXISTS idx_matches_team_names_lower
   ON matches (lower(home_team_name), lower(away_team_name));
+
+CREATE INDEX IF NOT EXISTS idx_players_name_lower
+  ON players (lower(name));

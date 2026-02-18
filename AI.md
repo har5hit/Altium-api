@@ -52,7 +52,7 @@ APIs are open by default. Security is provided via:
 ## Football Data
 
 - Football APIs are read-only (GET routes only) for app consumption.
-- Football domains are split into features: `home-feed`, `matches`, `teams`, `leagues`, `standings`, and `search`.
+- Football domains are split into features: `home-feed`, `matches`, `teams`, `players`, `leagues`, `standings`, and `search`.
 - Data ingestion from vendor HTTP/WS is internal (no public write routes).
 - Ingestion concerns live under `src/features/ingestion/`.
 - Repositories are feature-owned (for example, team queries live in `src/features/teams/repositories/`).

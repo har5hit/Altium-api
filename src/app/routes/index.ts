@@ -7,6 +7,7 @@ import leaguesRoutes from '@/features/leagues/routes/leaguesRoutes.js';
 import standingsRoutes from '@/features/standings/routes/standingsRoutes.js';
 import matchesRoutes from '@/features/matches/routes/matchesRoutes.js';
 import teamsRoutes from '@/features/teams/routes/teamsRoutes.js';
+import playersRoutes from '@/features/players/routes/playersRoutes.js';
 import searchRoutes from '@/features/search/routes/searchRoutes.js';
 
 const healthResponseSchema = {
@@ -44,6 +45,7 @@ export default async function routes(fastify: FastifyInstance) {
   fastify.register(standingsRoutes, { prefix: `${API_PREFIX}/football` });
   fastify.register(matchesRoutes, { prefix: `${API_PREFIX}/football` });
   fastify.register(teamsRoutes, { prefix: `${API_PREFIX}/football` });
+  fastify.register(playersRoutes, { prefix: `${API_PREFIX}/football` });
   fastify.register(searchRoutes, { prefix: `${API_PREFIX}/football` });
   fastify.register(wsRoutes, { prefix: `${API_PREFIX}/ws` });
 }

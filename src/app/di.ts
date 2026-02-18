@@ -17,6 +17,9 @@ import MatchesRepository from '@/features/matches/repositories/MatchesRepository
 import GetTeamById from '@/features/teams/usecases/GetTeamById.js';
 import GetTeamFixtures from '@/features/teams/usecases/GetTeamFixtures.js';
 import TeamsRepository from '@/features/teams/repositories/TeamsRepository.js';
+import GetPlayerById from '@/features/players/usecases/GetPlayerById.js';
+import GetTeamPlayers from '@/features/players/usecases/GetTeamPlayers.js';
+import PlayersRepository from '@/features/players/repositories/PlayersRepository.js';
 import SearchFootball from '@/features/search/usecases/SearchFootball.js';
 import SearchRepository from '@/features/search/repositories/SearchRepository.js';
 import type { ReadCache } from '@/support/cache.js';
@@ -86,6 +89,9 @@ function createRepositorySingletons(fastify: FastifyInstance) {
       ? new MatchesRepository(pg)
       : createServiceUnavailableProxy<MatchesRepository>(DB_UNAVAILABLE_MESSAGE),
     teams: pg ? new TeamsRepository(pg) : createServiceUnavailableProxy<TeamsRepository>(DB_UNAVAILABLE_MESSAGE),
+    players: pg
+      ? new PlayersRepository(pg)
+      : createServiceUnavailableProxy<PlayersRepository>(DB_UNAVAILABLE_MESSAGE),
     search: pg
       ? new SearchRepository(pg)
       : createServiceUnavailableProxy<SearchRepository>(DB_UNAVAILABLE_MESSAGE),
@@ -109,6 +115,8 @@ function createUsecaseFactory(
     getMatchById: () => new GetMatchById(repositories.matches, readCache),
     getTeamById: () => new GetTeamById(repositories.teams, readCache),
     getTeamFixtures: () => new GetTeamFixtures(repositories.teams, readCache),
+    getPlayerById: () => new GetPlayerById(repositories.players, readCache),
+    getTeamPlayers: () => new GetTeamPlayers(repositories.players, readCache),
     searchFootball: () => new SearchFootball(repositories.search, readCache),
   };
 }
@@ -121,6 +129,7 @@ export interface AppDi {
     standings: StandingsRepository;
     matches: MatchesRepository;
     teams: TeamsRepository;
+    players: PlayersRepository;
     search: SearchRepository;
   };
   usecases: {
@@ -135,6 +144,8 @@ export interface AppDi {
     getMatchById: () => GetMatchById;
     getTeamById: () => GetTeamById;
     getTeamFixtures: () => GetTeamFixtures;
+    getPlayerById: () => GetPlayerById;
+    getTeamPlayers: () => GetTeamPlayers;
     searchFootball: () => SearchFootball;
   };
 }
