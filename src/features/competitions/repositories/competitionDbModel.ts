@@ -1,4 +1,4 @@
-export interface CompetitionDbModel {
+export interface LeagueDbModel {
   id: number;
   slug: string;
   name: string;

@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox';
 
-export const Competition = Type.Object({
+export const League = Type.Object({
   id: Type.Integer(),
   slug: Type.String(),
   name: Type.String(),

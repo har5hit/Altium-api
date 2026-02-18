@@ -1,5 +1,5 @@
 import { Type, type Static } from '@sinclair/typebox';
-import { Competition } from '@/features/competitions/models/competition.js';
+import { League } from '@/features/competitions/models/competition.js';
 import type CompetitionsRepository from '@/features/competitions/repositories/competitionsRepository.js';
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
@@ -8,7 +8,7 @@ export const GetCompetitionsInputSchema = Type.Object({
 });
 export type GetCompetitionsInput = Static<typeof GetCompetitionsInputSchema>;
 
-export const GetCompetitionsOutputSchema = Type.Array(Competition);
+export const GetCompetitionsOutputSchema = Type.Array(League);
 export type GetCompetitionsOutput = Static<typeof GetCompetitionsOutputSchema>;
 
 export default class GetCompetitions {
