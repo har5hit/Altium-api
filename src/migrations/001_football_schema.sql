@@ -1,0 +1,83 @@
+CREATE TABLE IF NOT EXISTS competitions (
+  id BIGINT PRIMARY KEY,
+  slug TEXT NOT NULL,
+  name TEXT NOT NULL,
+  country TEXT NOT NULL,
+  priority INTEGER NOT NULL DEFAULT 9999,
+  logo_url TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS teams (
+  id BIGINT PRIMARY KEY,
+  name TEXT NOT NULL,
+  short_name TEXT NOT NULL,
+  country TEXT NOT NULL,
+  logo_url TEXT,
+  founded INTEGER,
+  stadium TEXT,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS matches (
+  id BIGINT PRIMARY KEY,
+  competition_id BIGINT NOT NULL REFERENCES competitions(id),
+  utc_kickoff TIMESTAMPTZ NOT NULL,
+  status TEXT NOT NULL,
+  minute INTEGER,
+  home_team_id BIGINT NOT NULL REFERENCES teams(id),
+  home_team_name TEXT NOT NULL,
+  away_team_id BIGINT NOT NULL REFERENCES teams(id),
+  away_team_name TEXT NOT NULL,
+  home_score INTEGER NOT NULL DEFAULT 0,
+  away_score INTEGER NOT NULL DEFAULT 0,
+  venue TEXT,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS standings_snapshots (
+  competition_id BIGINT NOT NULL REFERENCES competitions(id),
+  season TEXT NOT NULL,
+  position INTEGER NOT NULL,
+  team_id BIGINT NOT NULL REFERENCES teams(id),
+  team_name TEXT NOT NULL,
+  played INTEGER NOT NULL,
+  won INTEGER NOT NULL,
+  draw INTEGER NOT NULL,
+  lost INTEGER NOT NULL,
+  goals_for INTEGER NOT NULL,
+  goals_against INTEGER NOT NULL,
+  goal_difference INTEGER NOT NULL,
+  points INTEGER NOT NULL,
+  form TEXT,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (competition_id, season, team_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_competitions_active_priority
+  ON competitions (is_active, priority, id);
+
+CREATE INDEX IF NOT EXISTS idx_matches_live_kickoff
+  ON matches (status, utc_kickoff, id);
+
+CREATE INDEX IF NOT EXISTS idx_matches_team_kickoff
+  ON matches (home_team_id, utc_kickoff DESC, id DESC);
+
+CREATE INDEX IF NOT EXISTS idx_matches_team_away_kickoff
+  ON matches (away_team_id, utc_kickoff DESC, id DESC);
+
+CREATE INDEX IF NOT EXISTS idx_matches_competition_kickoff
+  ON matches (competition_id, utc_kickoff DESC, id DESC);
+
+CREATE INDEX IF NOT EXISTS idx_standings_competition_season_position
+  ON standings_snapshots (competition_id, season, position);
+
+CREATE INDEX IF NOT EXISTS idx_teams_name_lower
+  ON teams (lower(name));
+
+CREATE INDEX IF NOT EXISTS idx_competitions_name_lower
+  ON competitions (lower(name));
+
+CREATE INDEX IF NOT EXISTS idx_matches_team_names_lower
+  ON matches (lower(home_team_name), lower(away_team_name));

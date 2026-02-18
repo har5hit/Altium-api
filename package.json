@@ -2,12 +2,13 @@
   "name": "altium-api",
   "version": "1.0.0",
   "type": "module",
-  "main": "dist/server.js",
+  "main": "dist/app/server.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "dev": "tsx watch src/server.ts",
-    "test": "tsx --test tests/**/*.test.ts"
+    "build": "tsc && tsc-alias",
+    "start": "node dist/app/server.js",
+    "dev": "tsx watch src/app/server.ts",
+    "test": "tsx --test tests/**/*.test.ts",
+    "sdk:generate": "node api-sdk/scripts/generate-sdk.mjs"
   },
   "repository": {
     "type": "git",
@@ -28,7 +29,10 @@
     "@fastify/rate-limit": "^10.3.0",
     "@fastify/redis": "^7.2.0",
     "@fastify/sensible": "^6.0.4",
+    "@fastify/swagger": "^9.7.0",
+    "@fastify/swagger-ui": "^5.2.5",
     "@fastify/websocket": "^11.2.0",
+    "@sinclair/typebox": "^0.34.48",
     "fastify": "^5.7.4",
     "fastify-plugin": "^5.1.0",
     "pino": "^10.3.1",
@@ -36,6 +40,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.2.3",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

@@ -6,75 +6,93 @@ Fastify coding standards for the Altium iOS project.
 
 ```
 ├── src/
-│   ├── app.ts                # Fastify instance setup (buildApp)
-│   ├── server.ts             # Entry point (starts server)
-│   ├── types.ts              # Shared interfaces & Fastify module augmentation
-│
-│   ├── plugins/              # Fastify plugins
-│   │   ├── db.ts
-│   │   ├── auth.ts
-│   │   ├── redis.ts
-│   │   └── index.ts
-│
-│   ├── routes/               # Route definitions
-│   │   ├── index.ts
-│   │   ├── users/
-│   │   │   ├── routes.ts
-│   │   │   ├── controller.ts
-│   │   │   └── schema.ts
-│   │   │
-│   │   ├── auth/
-│   │   │   ├── routes.ts
-│   │   │   ├── controller.ts
-│   │   │   └── schema.ts
-│   │   │
-│   │   └── ws/
-│   │       └── routes.ts          # WebSocket routes
-│
-│   ├── services/             # Business logic layer
-│   │   ├── userService.ts
-│   │   └── authService.ts
-│
-│   ├── repositories/         # DB access layer
-│   │   ├── userRepository.ts
-│   │   └── authRepository.ts
-│
-│   ├── middlewares/           # Reusable Fastify hooks
-│
-│   ├── migrations/           # PostgreSQL schema migrations
-│
-│   ├── utils/
-│   │   ├── logger.ts
+│   ├── app/                  # Core + common app code
+│   │   ├── app.ts            # Fastify instance setup (buildApp)
+│   │   ├── server.ts         # Entry point (starts server)
+│   │   ├── di.ts             # DI container (singleton repositories + usecase factories)
+│   │   ├── types.ts
 │   │   ├── errors.ts
-│   │   └── helpers.ts
-│
-│   ├── config/
-│   │   ├── env.ts
-│   │   └── constants.ts
-│
-│   └── schemas/              # Shared JSON schemas
-│       ├── userSchema.ts
-│       └── commonSchema.ts
+│   │   ├── logger.ts
+│   │   ├── helpers.ts
+│   │   ├── config/
+│   │   │   ├── env.ts
+│   │   │   └── constants.ts
+│   │   ├── plugins/
+│   │   │   ├── db.ts
+│   │   │   ├── auth.ts
+│   │   │   ├── redis.ts
+│   │   │   ├── swagger.ts
+│   │   │   └── index.ts
+│   │   ├── routes/
+│   │   │   └── index.ts
+│   │   └── schemas/
+│   │       └── commonSchema.ts
+│   │
+│   ├── features/             # Feature-layered modules
+│   │   ├── users/
+│   │   │   ├── models/
+│   │   │   │   └── user.ts
+│   │   │   ├── routes/
+│   │   │   │   └── userRoutes.ts
+│   │   │   ├── controllers/
+│   │   │   │   └── userController.ts
+│   │   │   ├── usecases/
+│   │   │   │   ├── CreateUser.ts
+│   │   │   │   ├── GetUsers.ts
+│   │   │   │   ├── GetUserById.ts
+│   │   │   │   └── DeleteUser.ts
+│   │   │   └── repositories/
+│   │   │       ├── userRepository.ts
+│   │   │       └── userDbModel.ts
+│   │   ├── home-feed/
+│   │   ├── matches/
+│   │   ├── teams/
+│   │   ├── competitions/
+│   │   ├── standings/
+│   │   ├── search/
+│   │   ├── ingestion/
+│   │   │   ├── providers/
+│   │   │   ├── repositories/
+│   │   │   └── workers/
+│   │   └── football-common/
+│   │       ├── usecases/
+│   │   └── ws/
+│   │       └── routes/
+│   │           └── wsRoutes.ts
+│   │
+│   ├── middlewares/          # Reusable Fastify hooks
+│   ├── support/              # Shared support utilities (framework-agnostic)
+│   └── migrations/           # PostgreSQL schema migrations (SQL)
 │
 ├── tests/
-│   ├── user.test.ts
-│   └── auth.test.ts
+│   └── user.test.ts
 │
 ├── .env.example
 ├── .gitignore
 ├── tsconfig.json
 ├── package.json
-└── CLAUDE.md
+├── api-sdk/               # OpenAPI -> client SDK generator module
+└── AI.md
 ```
 
 ## Conventions
 
 - **Language:** TypeScript with strict mode
 - **Module system:** ESM (`import`/`export`, `"type": "module"`)
-- **Imports:** Always use `.js` extensions (required by Node16 module resolution)
-- **Route pattern:** Each domain gets its own folder under `routes/` with `routes.ts`, `controller.ts`, `schema.ts`
-- **Data flow:** Route handler -> Controller -> Service -> Repository -> PostgreSQL
-- **Types:** Shared interfaces live in `src/types.ts`; Fastify instance is augmented there for `config` and custom decorators
+- **Imports:** Use absolute alias imports from `@/` for project files (no relative local imports), and keep `.js` extensions for ESM compatibility
+- **Class members:** class fields and constructor-injected properties must be `camelCase`
+- **Model fields:** all POJO model properties and `*DbModel` interface fields must be `camelCase`
+- **Architecture:** `src/app/` contains app-level core/common code; `src/features/<feature>/` contains feature code
+- **Feature pattern:** Each feature contains `routes/`, `controllers/`, `usecases/`, and `repositories/`
+- **Data flow:** Route handler -> Controller -> Usecase -> Repository -> PostgreSQL
+- **Dependency injection:** `src/app/di.ts` owns app wiring. Repositories are singleton instances; usecases are created per request.
+- **Usecases:** One file per use case (example: `CreateUser.ts`) exports `<UsecaseName>InputSchema` and `<UsecaseName>OutputSchema` (TypeBox), derives TS types from those schemas, injects repository dependencies in constructor, and implements one `invoke()` method
+- **Repository model naming:** DB model files must live in feature repositories and be suffixed with `DbModel.ts` (example: `userDbModel.ts`)
+- **Read-heavy football APIs:** expose only GET routes; split football domains into separate features (`home-feed`, `matches`, `teams`, `competitions`, `standings`, `search`)
+- **Football repositories:** repositories stay inside their owning feature; no cross-feature shared read repository class
+- **Ingestion design:** external vendor polling/WS consumers live under feature `providers/` + `workers/` and are started from app plugins
+- **Types:** Shared app-level interfaces and Fastify augmentation live in `src/app/types.ts`
 - **Plugins are conditional:** `db` and `redis` plugins only load when their env vars are set, allowing the server to start without external services during development
-- **Schemas:** Route-specific schemas live in `routes/<domain>/schema.ts`; shared/reusable schemas live in `schemas/`
-- **WebSocket:** `@fastify/websocket` is registered globally in `app.ts`. WS routes live in `routes/ws/routes.ts` and use `{ websocket: true }` on `.get()` handlers
+- **Support utilities:** put non-app-specific, non-feature-specific helpers in `src/support/` (example: cache primitives like `getOrSetCached`)
+- **Schemas:** Route validation schemas must come from usecase `*Schema` exports to keep Swagger and runtime validation in sync; reusable shared schema objects live in `src/app/schemas/` or feature `models/`
+- **WebSocket:** `@fastify/websocket` is registered globally in `src/app/app.ts`. WS routes live in `src/features/ws/routes/wsRoutes.ts` and use `{ websocket: true }` on `.get()` handlers
