@@ -8,7 +8,7 @@ export default class VendorIngestWorker {
     private readonly client: VendorHttpClient,
     private readonly repository: FootballIngestRepository,
     private readonly intervalMs: number,
-    private readonly standingsSeed: Array<{ competitionId: number; season: string }>
+    private readonly standingsSeed: Array<{ leagueId: number; season: string }>
   ) {}
 
   start(): void {
@@ -27,18 +27,18 @@ export default class VendorIngestWorker {
   }
 
   private async pollOnce(): Promise<void> {
-    const [competitions, teams, matches] = await Promise.all([
-      this.client.getCompetitions(),
+    const [leagues, teams, matches] = await Promise.all([
+      this.client.getLeagues(),
       this.client.getTeams(),
       this.client.getMatches(),
     ]);
 
-    await this.repository.upsertCompetitions(competitions);
+    await this.repository.upsertLeagues(leagues);
     await this.repository.upsertTeams(teams);
     await this.repository.upsertMatches(matches);
 
     for (const seed of this.standingsSeed) {
-      const rows = await this.client.getStandings(seed.competitionId, seed.season);
+      const rows = await this.client.getStandings(seed.leagueId, seed.season);
       await this.repository.replaceStandings(rows);
     }
   }

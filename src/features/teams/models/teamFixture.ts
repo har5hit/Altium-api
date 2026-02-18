@@ -3,7 +3,7 @@ import { MatchStatus } from '@/features/matches/models/matchStatus.js';
 
 export const TeamFixture = Type.Object({
   id: Type.Integer(),
-  competitionId: Type.Integer(),
+  leagueId: Type.Integer(),
   utcKickoff: Type.String({ format: 'date-time' }),
   status: Type.Enum(MatchStatus),
   minute: Type.Union([Type.Integer(), Type.Null()]),

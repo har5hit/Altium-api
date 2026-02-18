@@ -1,6 +1,6 @@
 import type { PostgresDb } from '@fastify/postgres';
 import type {
-  VendorCompetitionDbModel,
+  VendorLeagueDbModel,
   VendorMatchDbModel,
   VendorStandingsRowDbModel,
   VendorTeamDbModel,
@@ -9,10 +9,10 @@ import type {
 export default class FootballIngestRepository {
   constructor(private readonly postgresDb: PostgresDb) {}
 
-  async upsertCompetitions(items: VendorCompetitionDbModel[]): Promise<void> {
+  async upsertLeagues(items: VendorLeagueDbModel[]): Promise<void> {
     for (const item of items) {
       await this.postgresDb.query(
-        `INSERT INTO competitions (id, slug, name, country, priority, logo_url, is_active)
+        `INSERT INTO leagues (id, slug, name, country, priority, logo_url, is_active)
          VALUES ($1, $2, $3, $4, $5, $6, true)
          ON CONFLICT (id) DO UPDATE SET
            slug = EXCLUDED.slug,
@@ -47,13 +47,13 @@ export default class FootballIngestRepository {
     for (const item of items) {
       await this.postgresDb.query(
         `INSERT INTO matches (
-          id, competition_id, utc_kickoff, status, minute,
+          id, league_id, utc_kickoff, status, minute,
           home_team_id, home_team_name, away_team_id, away_team_name,
           home_score, away_score, venue
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         ON CONFLICT (id) DO UPDATE SET
-          competition_id = EXCLUDED.competition_id,
+          league_id = EXCLUDED.league_id,
           utc_kickoff = EXCLUDED.utc_kickoff,
           status = EXCLUDED.status,
           minute = EXCLUDED.minute,
@@ -66,7 +66,7 @@ export default class FootballIngestRepository {
           venue = EXCLUDED.venue`,
         [
           item.id,
-          item.competitionId,
+          item.leagueId,
           item.utcKickoff,
           item.status,
           item.minute,
@@ -85,20 +85,20 @@ export default class FootballIngestRepository {
   async replaceStandings(rows: VendorStandingsRowDbModel[]): Promise<void> {
     if (rows.length === 0) return;
 
-    const { competitionId, season } = rows[0];
-    await this.postgresDb.query('DELETE FROM standings_snapshots WHERE competition_id = $1 AND season = $2', [
-      competitionId,
+    const { leagueId, season } = rows[0];
+    await this.postgresDb.query('DELETE FROM standings_snapshots WHERE league_id = $1 AND season = $2', [
+      leagueId,
       season,
     ]);
 
     for (const row of rows) {
       await this.postgresDb.query(
         `INSERT INTO standings_snapshots (
-          competition_id, season, position, team_id, team_name,
+          league_id, season, position, team_id, team_name,
           played, won, draw, lost, goals_for, goals_against, goal_difference, points, form
         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`,
         [
-          row.competitionId,
+          row.leagueId,
           row.season,
           row.position,
           row.teamId,

@@ -1,5 +1,7 @@
+import type { SearchResultType } from '@/features/search/models/searchResult.js';
+
 export interface SearchResultDbModel {
-  type: 'team' | 'competition' | 'match';
+  type: SearchResultType;
   id: number;
   title: string;
   subtitle: string | null;

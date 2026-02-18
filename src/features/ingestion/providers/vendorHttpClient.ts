@@ -1,5 +1,5 @@
 import type {
-  VendorCompetitionDbModel,
+  VendorLeagueDbModel,
   VendorMatchDbModel,
   VendorStandingsRowDbModel,
   VendorTeamDbModel,
@@ -23,8 +23,8 @@ export default class VendorHttpClient {
     return response.json() as Promise<T>;
   }
 
-  getCompetitions(): Promise<VendorCompetitionDbModel[]> {
-    return this.fetchJson<VendorCompetitionDbModel[]>('/competitions');
+  getLeagues(): Promise<VendorLeagueDbModel[]> {
+    return this.fetchJson<VendorLeagueDbModel[]>('/leagues');
   }
 
   getTeams(): Promise<VendorTeamDbModel[]> {
@@ -35,9 +35,9 @@ export default class VendorHttpClient {
     return this.fetchJson<VendorMatchDbModel[]>('/matches');
   }
 
-  getStandings(competitionId: number, season: string): Promise<VendorStandingsRowDbModel[]> {
+  getStandings(leagueId: number, season: string): Promise<VendorStandingsRowDbModel[]> {
     return this.fetchJson<VendorStandingsRowDbModel[]>(
-      `/competitions/${competitionId}/standings?season=${encodeURIComponent(season)}`
+      `/leagues/${leagueId}/standings?season=${encodeURIComponent(season)}`
     );
   }
 }

@@ -4,7 +4,7 @@ import { makeStandingsController } from '@/features/standings/controllers/standi
 import { GetStandingsOutputSchema } from '@/features/standings/usecases/GetStandings.js';
 
 const standingsParams = Type.Object({
-  competitionId: Type.Integer(),
+  leagueId: Type.Integer(),
 });
 
 const standingsQuery = Type.Object({
@@ -15,7 +15,7 @@ export default async function standingsRoutes(fastify: FastifyInstance) {
   const controller = makeStandingsController(fastify);
 
   fastify.get(
-    '/competitions/:competitionId/standings',
+    '/leagues/:leagueId/standings',
     {
       schema: {
         tags: ['football-standings'],

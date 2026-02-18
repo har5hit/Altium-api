@@ -2,7 +2,7 @@ import type { MatchStatus } from '@/features/matches/models/matchStatus.js';
 
 export interface MatchDbModel {
   id: number;
-  competitionId: number;
+  leagueId: number;
   utcKickoff: string;
   status: MatchStatus;
   minute: number | null;

@@ -27,7 +27,17 @@ function swiftType(schema, definitions) {
       const base = swiftType(nonNull[0], definitions);
       return hasNull ? `${base}?` : base;
     }
-    return 'JSONValue';
+    const resolvedTypes = [...new Set(nonNull.map((variant) => swiftType(variant, definitions)))];
+    if (resolvedTypes.length === 1) {
+      const base = resolvedTypes[0];
+      return hasNull && !base.endsWith('?') ? `${base}?` : base;
+    }
+    const nonJsonTypes = resolvedTypes.filter((typeName) => typeName !== 'JSONValue');
+    if (nonJsonTypes.length === 1) {
+      const base = nonJsonTypes[0];
+      return hasNull && !base.endsWith('?') ? `${base}?` : base;
+    }
+    return hasNull ? 'JSONValue?' : 'JSONValue';
   }
   if (schema.kind === 'object') return 'JSONValue';
   if (schema.kind === 'ref') {
@@ -40,13 +50,45 @@ function swiftType(schema, definitions) {
 function renderStruct(name, schema, definitions) {
   const typeName = sanitizeSwiftIdentifier(name, 'Model');
   const fields = schema.fields ?? [];
+  const enumBlocks = [];
+
+  function resolveClosedLiteralUnionEnum(fieldName, fieldSchema) {
+    if (!fieldSchema || fieldSchema.kind !== 'union') return null;
+
+    const nonNull = fieldSchema.variants.filter((variant) => variant.kind !== 'null');
+    const hasNull = nonNull.length !== fieldSchema.variants.length;
+    if (nonNull.length <= 1) return null;
+    if (!nonNull.every((variant) => variant.kind === 'literal')) return null;
+
+    const valueKinds = [...new Set(nonNull.map((variant) => typeof variant.value))];
+    if (valueKinds.length !== 1) return null;
+    const valueKind = valueKinds[0];
+    if (valueKind !== 'string' && valueKind !== 'number') return null;
+
+    const enumName = sanitizeSwiftIdentifier(`${typeName}${toPascalCase(fieldName)}`, 'EnumValue');
+    const enumCases = nonNull
+      .map((variant) => {
+        const caseName = sanitizeSwiftIdentifier(toCamelCase(String(variant.value)), 'value');
+        if (valueKind === 'string') return `    case ${caseName} = "${variant.value}"`;
+        return `    case ${caseName} = ${variant.value}`;
+      })
+      .join('\n');
+
+    const rawType = valueKind === 'string' ? 'String' : 'Int';
+    enumBlocks.push(`enum ${enumName}: ${rawType}, Codable {\n${enumCases}\n}\n`);
+
+    return hasNull ? `${enumName}?` : enumName;
+  }
+
   const lines = fields.map((field) => {
     const propertyName = sanitizeSwiftIdentifier(toCamelCase(field.name), 'value');
-    const baseType = swiftType(field.schema, definitions);
+    const explicitEnumType = resolveClosedLiteralUnionEnum(field.name, field.schema);
+    const baseType = explicitEnumType || swiftType(field.schema, definitions);
     const type = field.optional && !baseType.endsWith('?') ? `${baseType}?` : baseType;
     return `    let ${propertyName}: ${type}`;
   });
-  return `struct ${typeName}: Codable {\n${lines.join('\n')}\n}\n`;
+  const enumPrefix = enumBlocks.length > 0 ? `${enumBlocks.join('\n')}\n` : '';
+  return `${enumPrefix}struct ${typeName}: Codable {\n${lines.join('\n')}\n}\n`;
 }
 
 function renderEnum(name, enumDef) {

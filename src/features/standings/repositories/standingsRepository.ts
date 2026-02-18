@@ -4,7 +4,7 @@ import type { StandingRowDbModel } from '@/features/standings/repositories/stand
 export default class StandingsRepository {
   constructor(private readonly pg: PostgresDb) {}
 
-  async getStandings(competitionId: number, season: string): Promise<StandingRowDbModel[]> {
+  async getStandings(leagueId: number, season: string): Promise<StandingRowDbModel[]> {
     const { rows } = await this.pg.query<StandingRowDbModel>(
       `SELECT position,
               team_id AS "teamId",
@@ -19,9 +19,9 @@ export default class StandingsRepository {
               points,
               form
        FROM standings_snapshots
-       WHERE competition_id = $1 AND season = $2
+       WHERE league_id = $1 AND season = $2
        ORDER BY position ASC`,
-      [competitionId, season]
+      [leagueId, season]
     );
     return rows;
   }

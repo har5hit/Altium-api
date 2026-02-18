@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS competitions (
+CREATE TABLE IF NOT EXISTS leagues (
   id BIGINT PRIMARY KEY,
   slug TEXT NOT NULL,
   name TEXT NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS teams (
 
 CREATE TABLE IF NOT EXISTS matches (
   id BIGINT PRIMARY KEY,
-  competition_id BIGINT NOT NULL REFERENCES competitions(id),
+  league_id BIGINT NOT NULL REFERENCES leagues(id),
   utc_kickoff TIMESTAMPTZ NOT NULL,
   status TEXT NOT NULL,
   minute INTEGER,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS matches (
 );
 
 CREATE TABLE IF NOT EXISTS standings_snapshots (
-  competition_id BIGINT NOT NULL REFERENCES competitions(id),
+  league_id BIGINT NOT NULL REFERENCES leagues(id),
   season TEXT NOT NULL,
   position INTEGER NOT NULL,
   team_id BIGINT NOT NULL REFERENCES teams(id),
@@ -52,11 +52,11 @@ CREATE TABLE IF NOT EXISTS standings_snapshots (
   points INTEGER NOT NULL,
   form TEXT,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  PRIMARY KEY (competition_id, season, team_id)
+  PRIMARY KEY (league_id, season, team_id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_competitions_active_priority
-  ON competitions (is_active, priority, id);
+CREATE INDEX IF NOT EXISTS idx_leagues_active_priority
+  ON leagues (is_active, priority, id);
 
 CREATE INDEX IF NOT EXISTS idx_matches_live_kickoff
   ON matches (status, utc_kickoff, id);
@@ -67,17 +67,17 @@ CREATE INDEX IF NOT EXISTS idx_matches_team_kickoff
 CREATE INDEX IF NOT EXISTS idx_matches_team_away_kickoff
   ON matches (away_team_id, utc_kickoff DESC, id DESC);
 
-CREATE INDEX IF NOT EXISTS idx_matches_competition_kickoff
-  ON matches (competition_id, utc_kickoff DESC, id DESC);
+CREATE INDEX IF NOT EXISTS idx_matches_league_kickoff
+  ON matches (league_id, utc_kickoff DESC, id DESC);
 
-CREATE INDEX IF NOT EXISTS idx_standings_competition_season_position
-  ON standings_snapshots (competition_id, season, position);
+CREATE INDEX IF NOT EXISTS idx_standings_league_season_position
+  ON standings_snapshots (league_id, season, position);
 
 CREATE INDEX IF NOT EXISTS idx_teams_name_lower
   ON teams (lower(name));
 
-CREATE INDEX IF NOT EXISTS idx_competitions_name_lower
-  ON competitions (lower(name));
+CREATE INDEX IF NOT EXISTS idx_leagues_name_lower
+  ON leagues (lower(name));
 
 CREATE INDEX IF NOT EXISTS idx_matches_team_names_lower
   ON matches (lower(home_team_name), lower(away_team_name));

@@ -5,13 +5,13 @@ export function makeStandingsController(fastify: FastifyInstance) {
   return {
     getStandings(
       request: FastifyRequest<{
-        Params: Pick<GetStandingsInput, 'competitionId'>;
+        Params: Pick<GetStandingsInput, 'leagueId'>;
         Querystring: Pick<GetStandingsInput, 'season'>;
       }>,
       _reply: FastifyReply
     ) {
       return fastify.di.usecases.getStandings().invoke({
-        competitionId: request.params.competitionId,
+        leagueId: request.params.leagueId,
         season: request.query.season,
       });
     },

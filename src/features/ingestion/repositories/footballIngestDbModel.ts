@@ -1,6 +1,6 @@
 import type { MatchStatus } from '@/features/matches/models/matchStatus.js';
 
-export interface VendorCompetitionDbModel {
+export interface VendorLeagueDbModel {
   id: number;
   slug: string;
   name: string;
@@ -21,7 +21,7 @@ export interface VendorTeamDbModel {
 
 export interface VendorMatchDbModel {
   id: number;
-  competitionId: number;
+  leagueId: number;
   utcKickoff: string;
   status: MatchStatus;
   minute: number | null;
@@ -35,7 +35,7 @@ export interface VendorMatchDbModel {
 }
 
 export interface VendorStandingsRowDbModel {
-  competitionId: number;
+  leagueId: number;
   season: string;
   position: number;
   teamId: number;

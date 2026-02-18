@@ -7,8 +7,8 @@ import GetUsers from '@/features/users/usecases/GetUsers.js';
 import UserRepository from '@/features/users/repositories/userRepository.js';
 import GetHomeFeed from '@/features/home-feed/usecases/GetHomeFeed.js';
 import HomeFeedRepository from '@/features/home-feed/repositories/homeFeedRepository.js';
-import GetCompetitions from '@/features/competitions/usecases/GetCompetitions.js';
-import CompetitionsRepository from '@/features/competitions/repositories/competitionsRepository.js';
+import GetLeagues from '@/features/leagues/usecases/GetLeagues.js';
+import LeaguesRepository from '@/features/leagues/repositories/leaguesRepository.js';
 import GetStandings from '@/features/standings/usecases/GetStandings.js';
 import StandingsRepository from '@/features/standings/repositories/standingsRepository.js';
 import GetLiveMatches from '@/features/matches/usecases/GetLiveMatches.js';
@@ -76,9 +76,9 @@ function createRepositorySingletons(fastify: FastifyInstance) {
     homeFeed: pg
       ? new HomeFeedRepository(pg)
       : createServiceUnavailableProxy<HomeFeedRepository>(DB_UNAVAILABLE_MESSAGE),
-    competitions: pg
-      ? new CompetitionsRepository(pg)
-      : createServiceUnavailableProxy<CompetitionsRepository>(DB_UNAVAILABLE_MESSAGE),
+    leagues: pg
+      ? new LeaguesRepository(pg)
+      : createServiceUnavailableProxy<LeaguesRepository>(DB_UNAVAILABLE_MESSAGE),
     standings: pg
       ? new StandingsRepository(pg)
       : createServiceUnavailableProxy<StandingsRepository>(DB_UNAVAILABLE_MESSAGE),
@@ -103,7 +103,7 @@ function createUsecaseFactory(
     deleteUser: () => new DeleteUser(repositories.user),
 
     getHomeFeed: () => new GetHomeFeed(repositories.homeFeed, readCache),
-    getCompetitions: () => new GetCompetitions(repositories.competitions, readCache),
+    getLeagues: () => new GetLeagues(repositories.leagues, readCache),
     getStandings: () => new GetStandings(repositories.standings, readCache),
     getLiveMatches: () => new GetLiveMatches(repositories.matches, readCache),
     getMatchById: () => new GetMatchById(repositories.matches, readCache),
@@ -117,7 +117,7 @@ export interface AppDi {
   repositories: {
     user: UserRepository;
     homeFeed: HomeFeedRepository;
-    competitions: CompetitionsRepository;
+    leagues: LeaguesRepository;
     standings: StandingsRepository;
     matches: MatchesRepository;
     teams: TeamsRepository;
@@ -129,7 +129,7 @@ export interface AppDi {
     getUserById: () => GetUserById;
     deleteUser: () => DeleteUser;
     getHomeFeed: () => GetHomeFeed;
-    getCompetitions: () => GetCompetitions;
+    getLeagues: () => GetLeagues;
     getStandings: () => GetStandings;
     getLiveMatches: () => GetLiveMatches;
     getMatchById: () => GetMatchById;

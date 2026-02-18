@@ -16,9 +16,9 @@ export default class SearchRepository {
        )
        UNION ALL
        (
-         SELECT 'competition'::text as type, id, name as title,
+         SELECT 'league'::text as type, id, name as title,
                 country as subtitle, slug as meta
-         FROM competitions
+         FROM leagues
          WHERE lower(name) LIKE $1
          LIMIT $2
        )

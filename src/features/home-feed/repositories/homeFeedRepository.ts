@@ -8,7 +8,7 @@ export default class HomeFeedRepository {
   async getHomeFeed(limit: number): Promise<MatchDbModel[]> {
     const { rows } = await this.pg.query<MatchDbModel>(
       `SELECT id,
-              competition_id AS "competitionId",
+              league_id AS "leagueId",
               utc_kickoff AS "utcKickoff",
               status,
               minute,

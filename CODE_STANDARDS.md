@@ -47,7 +47,7 @@ Fastify coding standards for the Altium iOS project.
 │   │   ├── home-feed/
 │   │   ├── matches/
 │   │   ├── teams/
-│   │   ├── competitions/
+│   │   ├── leagues/
 │   │   ├── standings/
 │   │   ├── search/
 │   │   ├── ingestion/
@@ -88,7 +88,7 @@ Fastify coding standards for the Altium iOS project.
 - **Dependency injection:** `src/app/di.ts` owns app wiring. Repositories are singleton instances; usecases are created per request.
 - **Usecases:** One file per use case (example: `CreateUser.ts`) exports `<UsecaseName>InputSchema` and `<UsecaseName>OutputSchema` (TypeBox), derives TS types from those schemas, injects repository dependencies in constructor, and implements one `invoke()` method
 - **Repository model naming:** DB model files must live in feature repositories and be suffixed with `DbModel.ts` (example: `userDbModel.ts`)
-- **Read-heavy football APIs:** expose only GET routes; split football domains into separate features (`home-feed`, `matches`, `teams`, `competitions`, `standings`, `search`)
+- **Read-heavy football APIs:** expose only GET routes; split football domains into separate features (`home-feed`, `matches`, `teams`, `leagues`, `standings`, `search`)
 - **Football repositories:** repositories stay inside their owning feature; no cross-feature shared read repository class
 - **Ingestion design:** external vendor polling/WS consumers live under feature `providers/` + `workers/` and are started from app plugins
 - **Types:** Shared app-level interfaces and Fastify augmentation live in `src/app/types.ts`

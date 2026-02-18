@@ -4,7 +4,7 @@ import type StandingsRepository from '@/features/standings/repositories/standing
 import { getOrSetCached, type ReadCache } from '@/support/cache.js';
 
 export const GetStandingsInputSchema = Type.Object({
-  competitionId: Type.Integer(),
+  leagueId: Type.Integer(),
   season: Type.String({ minLength: 4, maxLength: 16 }),
 });
 export type GetStandingsInput = Static<typeof GetStandingsInputSchema>;
@@ -19,9 +19,9 @@ export default class GetStandings {
   ) {}
 
   async invoke(input: GetStandingsInput): Promise<GetStandingsOutput> {
-    const key = `football:standings:${input.competitionId}:${input.season}`;
+    const key = `football:standings:${input.leagueId}:${input.season}`;
     return getOrSetCached(this.cache, key, 60, () =>
-      this.repository.getStandings(input.competitionId, input.season)
+      this.repository.getStandings(input.leagueId, input.season)
     );
   }
 }

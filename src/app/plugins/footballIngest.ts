@@ -6,7 +6,7 @@ import FootballIngestRepository from '@/features/ingestion/repositories/football
 import VendorIngestWorker from '@/features/ingestion/workers/vendorIngestWorker.js';
 import LiveEventWorker from '@/features/ingestion/workers/liveEventWorker.js';
 
-function parseStandingsSeed(input: string): Array<{ competitionId: number; season: string }> {
+function parseStandingsSeed(input: string): Array<{ leagueId: number; season: string }> {
   if (!input) return [];
 
   return input
@@ -14,13 +14,13 @@ function parseStandingsSeed(input: string): Array<{ competitionId: number; seaso
     .map((item) => item.trim())
     .filter(Boolean)
     .map((item) => {
-      const [competitionIdRaw, seasonRaw] = item.split(':');
+      const [leagueIdRaw, seasonRaw] = item.split(':');
       return {
-        competitionId: Number(competitionIdRaw),
+        leagueId: Number(leagueIdRaw),
         season: seasonRaw,
       };
     })
-    .filter((item) => Number.isInteger(item.competitionId) && item.competitionId > 0 && item.season);
+    .filter((item) => Number.isInteger(item.leagueId) && item.leagueId > 0 && item.season);
 }
 
 async function footballIngestPlugin(fastify: FastifyInstance) {

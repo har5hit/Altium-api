@@ -1,7 +1,13 @@
 import { Type } from '@sinclair/typebox';
 
+export enum SearchResultType {
+  Team = 'team',
+  League = 'league',
+  Match = 'match',
+}
+
 export const SearchResult = Type.Object({
-  type: Type.Union([Type.Literal('team'), Type.Literal('competition'), Type.Literal('match')]),
+  type: Type.Enum(SearchResultType),
   id: Type.Integer(),
   title: Type.String(),
   subtitle: Type.Union([Type.String(), Type.Null()]),
