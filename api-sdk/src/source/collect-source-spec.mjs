@@ -230,6 +230,12 @@ function registerEnumDefinition(name, enumDecl, ctx) {
 function registerImportedOrLocalType(identifierName, ctx) {
   if (ctx.typeDefinitions.has(identifierName)) return;
 
+  const localEnum = ctx.module.exportedEnums.get(identifierName);
+  if (localEnum) {
+    registerEnumDefinition(identifierName, localEnum, ctx);
+    return;
+  }
+
   const local = ctx.module.localConsts.get(identifierName);
   if (local) {
     const schema = parseSchemaExpression(local, ctx);
